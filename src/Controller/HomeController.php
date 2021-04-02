@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -18,17 +20,30 @@ class HomeController
         private RouteCollectorInterface $routeCollector,
         private Environment $twig,
         private EntityManagerInterface $em
-    ) {}
+    ) {
+    }
 
     public function index(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         try {
             $data = $this->twig->render('home/index.html.twig', [
-                'trailers' => $this->fetchData(),
+                'controller_name' => $this->getShortNameClass(),
+                'method_name' => __FUNCTION__,
+                'now_date_time' => $this->getNowDateTime(),
+                //'trailers' => $this->fetchData(),
             ]);
         } catch (\Exception $e) {
             throw new HttpBadRequestException($request, $e->getMessage(), $e);
         }
+
+        $response->getBody()->write($data);
+
+        return $response;
+    }
+
+    public function test(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    {
+        $data = $this->twig->render('hello.html.twig', ['name' => 'Creative']);
 
         $response->getBody()->write($data);
 
@@ -41,5 +56,15 @@ class HomeController
             ->findAll();
 
         return new ArrayCollection($data);
+    }
+
+    private function getShortNameClass()
+    {
+        return (new \ReflectionClass($this))->getShortName();
+    }
+
+    private function getNowDateTime()
+    {
+        return date('Y-m-d H:i');
     }
 }
