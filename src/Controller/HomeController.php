@@ -30,8 +30,24 @@ class HomeController
                 'controller_name' => $this->getShortNameClass(),
                 'method_name' => __FUNCTION__,
                 'now_date_time' => $this->getNowDateTime(),
-                //'trailers' => $this->fetchData(),
+                'trailers' => $this->fetchDataAll(),
             ]);
+        } catch (\Exception $e) {
+            throw new HttpBadRequestException($request, $e->getMessage(), $e);
+        }
+
+        $response->getBody()->write($data);
+
+        return $response;
+    }
+
+    public function trailer(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    {
+
+        $id = (int) $request->getAttribute('id');
+
+        try {
+            $data = $this->twig->render('home/trailer.html.twig', ['trailer' => $this->fetchDataById($id)]);
         } catch (\Exception $e) {
             throw new HttpBadRequestException($request, $e->getMessage(), $e);
         }
@@ -50,12 +66,21 @@ class HomeController
         return $response;
     }
 
-    protected function fetchData(): Collection
+    protected function fetchDataAll(): Collection
     {
         $data = $this->em->getRepository(Movie::class)
             ->findAll();
 
         return new ArrayCollection($data);
+    }
+
+    protected function fetchDataById(int $id): object
+    {
+
+        $data = $this->em->getRepository(Movie::class)
+            ->find($id);
+
+        return $data;
     }
 
     private function getShortNameClass()

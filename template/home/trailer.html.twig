@@ -1,0 +1,14 @@
+{% extends 'main.html.twig' %}
+
+{% block title %}{{ trailer.title }} -  iTunes Movie {% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="mt-5 mb-4">{{ trailer.title }} - iTunes Movie</h1>
+        <p><b>Описание:</b> {{ trailer.description }}</p>
+        <img src="{{ trailer.image }}">
+        <div>
+            <a href="{{ trailer.link }}">Источник</a> или <a href="/">Назад к списку</a>
+        </div>
+    </div>
+{% endblock %}

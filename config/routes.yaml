@@ -9,3 +9,11 @@ test:
   path: test
   controller: App\Controller\HomeController
   action: test
+
+trailer:
+  method: 'get'
+  path: trailer/{id}
+  controller: App\Controller\HomeController
+  action: trailer
+  requirements:
+    page: '\d+'
