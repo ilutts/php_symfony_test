@@ -1,2 +1,1 @@
-# php_symfony_test
-Solving a test task about PHP Symfony
+# Тестовое задание для PHP-программиста
